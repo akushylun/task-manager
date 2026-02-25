@@ -1,0 +1,49 @@
+# ===========================
+# Node / Back-end (NestJS)
+# ===========================
+
+# dependencies
+backend/node_modules/
+
+# build output
+backend/dist/
+backend/build/
+# environment files
+backend/.env
+
+# logs
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+
+# ===========================
+# Angular / Front-end
+# ===========================
+
+# dependencies
+frontend/node_modules/
+
+# build output
+frontend/dist/
+frontend/out-tsc/
+# environment files
+frontend/src/environments/*.ts
+!frontend/src/environments/environment.example.ts
+
+# Angular cache
+frontend/.angular/
+# ===========================
+# General / IDE / OS
+# ===========================
+
+# VSCode
+frontend/.vscode/
+
+# IDE
+frontend/.idea/
+
+# macOS
+frontend/.DS_Store
+
+# logs
+*.log
