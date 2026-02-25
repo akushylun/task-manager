@@ -20,15 +20,7 @@ A pet project for managing tasks, built with **Node.js** and **Angular**.
 ```
 task-manager/
 ├── backend/          # Node.js backend API
-│   ├── app.js        # Main application file
-│   ├── controllers/  # Request handlers
-│   └── routes/       # API routes
 └── frontend/         # Angular frontend
-    └── src/
-        └── app/
-            ├── core/           # Core services
-            ├── features/       # Feature modules with state management
-            └── task-list/      # Task list components
 ```
 
 ## Getting Started
@@ -45,7 +37,7 @@ task-manager/
 ```bash
 cd backend
 npm install
-npm start
+npm run dev
 ```
 
 #### Frontend
