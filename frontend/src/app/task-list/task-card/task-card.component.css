@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+mat-card {
+  cursor: pointer;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+mat-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
