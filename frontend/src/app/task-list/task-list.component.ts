@@ -1,40 +1,34 @@
-import { Component, inject, input, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { TaskCardComponent } from './task-card/task-card.component';
-import { Task, TaskStatus } from './task-card/task';
+import { Component, inject, input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { tasksActions } from '../features/tasks/tasks.actions';
+import {
+  selectCompletedTasks,
+  selectInProgressTasks,
+  selectPendingTasks,
+} from '../features/tasks/tasks.selectors';
+import { Task, TaskStatus } from './task-card/task';
+import { TaskCardComponent } from './task-card/task-card.component';
+import { TaskActionsComponent } from './task-actions/task-actions.component';
 
 @Component({
   selector: 'app-task-list',
-  imports: [TaskCardComponent, MatButtonModule, MatInputModule, MatFormFieldModule],
+  imports: [TaskCardComponent, TaskActionsComponent],
   templateUrl: './task-list.component.html',
 })
 export class TaskListComponent {
   private readonly store = inject(Store);
 
-  readonly title = input.required<string>();
-  readonly tasks = input.required<Task[]>();
-  readonly status = input.required<TaskStatus>();
+  readonly status = TaskStatus;
+  readonly pendingTasks = this.store.selectSignal(selectPendingTasks);
+  readonly inProgressTasks = this.store.selectSignal(selectInProgressTasks);
+  readonly completedTasks = this.store.selectSignal(selectCompletedTasks);
 
-  readonly showInput = signal(false);
-
-  toggleInput() {
-    this.showInput.set(!this.showInput());
+  ngOnInit(): void {
+    this.store.dispatch(tasksActions.loadTasks());
   }
 
-  addCard(title = '') {
-    this.store.dispatch(
-      tasksActions.addTask({
-        task: {
-          id: 10,
-          status: this.status(),
-          title,
-        },
-      }),
-    );
-    this.toggleInput();
+  onAddTask(title: string, status: TaskStatus) {
+    const draftTask = { title, status };
+    this.store.dispatch(tasksActions.addTask({ task: draftTask }));
   }
 }

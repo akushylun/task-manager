@@ -20,16 +20,8 @@ export const tasksFeature = createFeature({
     on(tasksActions.tasksLoadedSuccess, (state, { tasks }) => {
       return { ...state, tasks, loading: false };
     }),
-    on(tasksActions.addTask, (state, { task }) => {
+    on(tasksActions.taskAddedSuccess, (state, { task }) => {
       const tasks = [...state.tasks, task];
-      return { ...state, tasks };
-    }),
-    on(tasksActions.updateTask, (state, { task }) => {
-      const tasks = state.tasks.map((t) => (t.id === task.id ? task : t));
-      return { ...state, tasks };
-    }),
-    on(tasksActions.deleteTask, (state, { task }) => {
-      const tasks = state.tasks.filter((t) => t.id === task.id);
       return { ...state, tasks };
     }),
   ),

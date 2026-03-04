@@ -1,20 +1,31 @@
-<section class="flex flex-col gap-4">
-  <h2 class="text-2xl font-semibold pb-4 border-b-2 border-gray-200">{{ title() }}</h2>
-  <div class="flex flex-col gap-4">
-    @for (task of tasks(); track task.id) {
-      <app-task-card [task]="task"></app-task-card>
-    }
-  </div>
-  @if (showInput()) {
-    <mat-form-field>
-      <mat-label>Task title</mat-label>
-      <input #input matInput type="text" placeholder="Enter task title" />
-    </mat-form-field>
-    <div class="flex gap-1">
-      <button matButton="filled" color="primary" (click)="addCard(input.value)">Confirm</button>
-      <button matButton="outlined" color="secondary" (click)="toggleInput()">Cancel</button>
+<div class="flex gap-4 justify-between">
+  <section class="flex flex-col gap-4 flex-1">
+    <h2 class="text-2xl font-semibold pb-4 border-b-2 border-gray-200">TODO:</h2>
+    <div class="flex flex-col gap-4">
+      @for (task of pendingTasks(); track task.id) {
+        <app-task-card [task]="task"></app-task-card>
+      }
     </div>
-  } @else {
-    <button matButton="filled" color="primary" (click)="toggleInput()">Add a card</button>
-  }
-</section>
+    <app-task-actions (add)="onAddTask($event, status.Pending)"></app-task-actions>
+  </section>
+
+  <section class="flex flex-col gap-4 flex-1">
+    <h2 class="text-2xl font-semibold pb-4 border-b-2 border-gray-200">IN PROGRESS:</h2>
+    <div class="flex flex-col gap-4">
+      @for (task of inProgressTasks(); track task.id) {
+        <app-task-card [task]="task"></app-task-card>
+      }
+    </div>
+    <app-task-actions (add)="onAddTask($event, status.InProgress)"></app-task-actions>
+  </section>
+
+  <section class="flex flex-col gap-4 flex-1">
+    <h2 class="text-2xl font-semibold pb-4 border-b-2 border-gray-200">DONE:</h2>
+    <div class="flex flex-col gap-4">
+      @for (task of completedTasks(); track task.id) {
+        <app-task-card [task]="task"></app-task-card>
+      }
+    </div>
+    <app-task-actions (add)="onAddTask($event, status.Completed)"></app-task-actions>
+  </section>
+</div>

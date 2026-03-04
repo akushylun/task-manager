@@ -10,4 +10,8 @@ export class TasksDataService {
   getTasks() {
     return this.httpClient.get<Task[]>('http://localhost:3000/tasks');
   }
+
+  addTask(task: Pick<Task, 'status' | 'title'>) {
+    return this.httpClient.post<{ task: Task }>('http://localhost:3000/tasks', { task });
+  }
 }
