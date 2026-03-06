@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Add Task</h2>
+<mat-dialog-content [formGroup]="form">
+  <mat-form-field class="w-full">
+    <mat-label>Task title</mat-label>
+    <input #input matInput formControlName="title" type="text" placeholder="Enter task title" />
+  </mat-form-field>
+  <mat-form-field class="w-full">
+    <mat-label>Type</mat-label>
+    <mat-select formControlName="status">
+      @for (type of types; track type) {
+        <mat-option [value]="type">{{ type }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton="outlined" color="secondary" mat-dialog-close>Cancel</button>
+  <button matButton="filled" color="primary" [disabled]="form.invalid" (click)="addCard()">
+    Confirm
+  </button>
+</mat-dialog-actions>

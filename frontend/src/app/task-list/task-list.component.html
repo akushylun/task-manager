@@ -1,4 +1,4 @@
-<div class="flex gap-4 justify-between">
+<div class="flex flex-col md:flex-row gap-4 md:justify-between">
   <section class="flex flex-col gap-4 flex-1">
     <h2 class="text-2xl font-semibold pb-4 border-b-2 border-gray-200">TODO:</h2>
     <div class="flex flex-col gap-4">
@@ -6,7 +6,6 @@
         <app-task-card [task]="task"></app-task-card>
       }
     </div>
-    <app-task-actions (add)="onAddTask($event, status.Pending)"></app-task-actions>
   </section>
 
   <section class="flex flex-col gap-4 flex-1">
@@ -16,7 +15,6 @@
         <app-task-card [task]="task"></app-task-card>
       }
     </div>
-    <app-task-actions (add)="onAddTask($event, status.InProgress)"></app-task-actions>
   </section>
 
   <section class="flex flex-col gap-4 flex-1">
@@ -26,6 +24,8 @@
         <app-task-card [task]="task"></app-task-card>
       }
     </div>
-    <app-task-actions (add)="onAddTask($event, status.Completed)"></app-task-actions>
   </section>
 </div>
+
+<button matButton="filled" color="primary" class="mt-15" (click)="open()">Add a card</button>
+Ø

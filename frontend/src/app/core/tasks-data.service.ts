@@ -1,7 +1,6 @@
-import { inject, Injectable } from '@angular/core';
-import { delay, Observable, of } from 'rxjs';
-import { Task, TaskStatus } from '../task-list/task-card/task';
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { DraftTask, Task } from '../task-list/task-card/task';
 
 @Injectable({ providedIn: 'root' })
 export class TasksDataService {
@@ -11,7 +10,7 @@ export class TasksDataService {
     return this.httpClient.get<Task[]>('http://localhost:3000/tasks');
   }
 
-  addTask(task: Pick<Task, 'status' | 'title'>) {
+  addTask(task: DraftTask) {
     return this.httpClient.post<{ task: Task }>('http://localhost:3000/tasks', { task });
   }
 }

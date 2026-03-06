@@ -1,22 +1,26 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
+import { filter, take, tap } from 'rxjs';
 import { tasksActions } from '../features/tasks/tasks.actions';
 import {
   selectCompletedTasks,
   selectInProgressTasks,
   selectPendingTasks,
 } from '../features/tasks/tasks.selectors';
-import { Task, TaskStatus } from './task-card/task';
+import { TaskActionsComponent } from './task-actions-dialog/task-actions-dialog.component';
+import { TaskStatus } from './task-card/task';
 import { TaskCardComponent } from './task-card/task-card.component';
-import { TaskActionsComponent } from './task-actions/task-actions.component';
 
 @Component({
   selector: 'app-task-list',
-  imports: [TaskCardComponent, TaskActionsComponent],
+  imports: [TaskCardComponent, MatButtonModule],
   templateUrl: './task-list.component.html',
 })
 export class TaskListComponent {
   private readonly store = inject(Store);
+  private readonly dialog = inject(MatDialog);
 
   readonly status = TaskStatus;
   readonly pendingTasks = this.store.selectSignal(selectPendingTasks);
@@ -27,8 +31,15 @@ export class TaskListComponent {
     this.store.dispatch(tasksActions.loadTasks());
   }
 
-  onAddTask(title: string, status: TaskStatus) {
-    const draftTask = { title, status };
-    this.store.dispatch(tasksActions.addTask({ task: draftTask }));
+  open() {
+    this.dialog
+      .open(TaskActionsComponent)
+      .afterClosed()
+      .pipe(
+        take(1),
+        filter((item) => item != null),
+        tap((task) => this.store.dispatch(tasksActions.addTask({ task }))),
+      )
+      .subscribe();
   }
 }

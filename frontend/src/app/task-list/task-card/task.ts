@@ -4,6 +4,8 @@ export interface Task {
   readonly status: TaskStatus;
 }
 
+export type DraftTask = Pick<Task, 'status' | 'title'>;
+
 export enum TaskStatus {
   Pending = 'pending',
   InProgress = 'in-progress',

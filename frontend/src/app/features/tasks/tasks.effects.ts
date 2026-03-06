@@ -3,7 +3,6 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map, switchMap } from 'rxjs';
 import { TasksDataService } from '../../core/tasks-data.service';
 import { tasksActions } from './tasks.actions';
-import { Task } from '../../task-list/task-card/task';
 
 @Injectable({ providedIn: 'root' })
 export class TasksEffects {

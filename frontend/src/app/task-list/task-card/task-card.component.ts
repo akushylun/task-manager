@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import type { Task } from './task';
+import { Task } from './task';
 
 @Component({
   selector: 'app-task-card',
