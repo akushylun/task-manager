@@ -1,0 +1,14 @@
+<nav>
+  <div class="bg-gray-800 text-white p-4">
+    <div class="container mx-auto flex items-center justify-between">
+      <a href="/" class="text-xl font-bold">Task Manager</a>
+      <div>
+        <a routerLink="/tasks" class="px-3 py-2 rounded hover:bg-gray-700">Tasks</a>
+        <a routerLink="/account" class="px-3 py-2 rounded hover:bg-gray-700">Account</a>
+      </div>
+    </div>
+  </div>
+</nav>
+<main class="p-8 max-w-7xl mx-auto">
+  <router-outlet />
+</main>
