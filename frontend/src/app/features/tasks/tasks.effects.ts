@@ -26,4 +26,12 @@ export class TasksEffects {
       map(({ task }) => tasksActions.taskAddedSuccess({ task })),
     ),
   );
+
+  readonly updateTask$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(tasksActions.updateTask),
+      switchMap(({ task }) => this.tasksDataService.update(task)),
+      map(({ task }) => tasksActions.taskUpdatedSuccess({ task })),
+    ),
+  );
 }

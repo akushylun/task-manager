@@ -1,27 +1,51 @@
 <div class="flex flex-col md:flex-row gap-4 md:justify-between">
   <section class="flex flex-col gap-4 flex-1">
     <h2 class="text-2xl font-semibold pb-4 border-b-2 border-gray-200">TODO:</h2>
-    <div class="flex flex-col gap-4">
+    <div
+      cdkDropList
+      #todoList="cdkDropList"
+      [id]="status.Pending"
+      [cdkDropListData]="pendingTasks()"
+      [cdkDropListConnectedTo]="[inProgressList, doneList]"
+      (cdkDropListDropped)="drop($event)"
+      class="flex flex-col gap-4 flex-1"
+    >
       @for (task of pendingTasks(); track task.id) {
-        <app-task-card [task]="task"></app-task-card>
+        <app-task-card [task]="task" [cdkDragData]="task" cdkDrag></app-task-card>
       }
     </div>
   </section>
 
   <section class="flex flex-col gap-4 flex-1">
     <h2 class="text-2xl font-semibold pb-4 border-b-2 border-gray-200">IN PROGRESS:</h2>
-    <div class="flex flex-col gap-4">
+    <div
+      cdkDropList
+      #inProgressList="cdkDropList"
+      [id]="status.InProgress"
+      [cdkDropListData]="inProgressTasks()"
+      [cdkDropListConnectedTo]="[todoList, doneList]"
+      (cdkDropListDropped)="drop($event)"
+      class="flex flex-col gap-4 flex-1"
+    >
       @for (task of inProgressTasks(); track task.id) {
-        <app-task-card [task]="task"></app-task-card>
+        <app-task-card [task]="task" [cdkDragData]="task" cdkDrag></app-task-card>
       }
     </div>
   </section>
 
   <section class="flex flex-col gap-4 flex-1">
     <h2 class="text-2xl font-semibold pb-4 border-b-2 border-gray-200">DONE:</h2>
-    <div class="flex flex-col gap-4">
+    <div
+      cdkDropList
+      #doneList="cdkDropList"
+      [id]="status.Completed"
+      [cdkDropListData]="completedTasks()"
+      [cdkDropListConnectedTo]="[todoList, inProgressList]"
+      (cdkDropListDropped)="drop($event)"
+      class="flex flex-col gap-4 flex-1"
+    >
       @for (task of completedTasks(); track task.id) {
-        <app-task-card [task]="task"></app-task-card>
+        <app-task-card [task]="task" [cdkDragData]="task" cdkDrag></app-task-card>
       }
     </div>
   </section>

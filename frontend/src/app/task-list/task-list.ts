@@ -1,3 +1,4 @@
+import { CdkDrag, CdkDragDrop, CdkDropList, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,12 +11,12 @@ import {
   selectPendingTasks,
 } from '../features/tasks/tasks.selectors';
 import { TaskActionsDialog } from './task-actions-dialog/task-actions-dialog';
-import { TaskStatus } from './task-card/task';
+import { Task, TaskStatus } from './task-card/task';
 import { TaskCard } from './task-card/task-card';
 
 @Component({
   selector: 'app-task-list',
-  imports: [TaskCard, MatButtonModule],
+  imports: [TaskCard, MatButtonModule, CdkDrag, CdkDropList],
   templateUrl: './task-list.html',
 })
 export class TaskList {
@@ -31,6 +32,9 @@ export class TaskList {
     this.store.dispatch(tasksActions.loadTasks());
   }
 
+  /**
+   * Open task actions dialog and handle add task action
+   */
   open() {
     this.dialog
       .open(TaskActionsDialog)
@@ -41,5 +45,27 @@ export class TaskList {
         tap((task) => this.store.dispatch(tasksActions.addTask({ task }))),
       )
       .subscribe();
+  }
+
+  /**
+   * Drop event between task lists and update task status
+   * @param event
+   */
+  drop(event: CdkDragDrop<Task[]>) {
+    if (event.previousContainer === event.container) {
+      return;
+    }
+
+    transferArrayItem(
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex,
+    );
+
+    const status = event.container.id as TaskStatus;
+    const task = { ...event.container.data[event.currentIndex], status: status };
+
+    this.store.dispatch(tasksActions.updateTask({ task }));
   }
 }

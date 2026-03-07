@@ -24,5 +24,9 @@ export const tasksFeature = createFeature({
       const tasks = [...state.tasks, task];
       return { ...state, tasks };
     }),
+    on(tasksActions.taskUpdatedSuccess, (state, { task }) => {
+      const tasks = state.tasks.map((t) => (t.id === task.id ? task : t));
+      return { ...state, tasks };
+    }),
   ),
 });

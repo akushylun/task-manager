@@ -5,13 +5,10 @@ const data = [
 ];
 
 const getTasksHandler = (req, res) => {
-  console.log('Fetching tasks...');
   res.json(data);
 };
 
 const postTasksHandler = (req, res) => {
-  console.log('Creating a new task...');
-  console.log('Request body:', req.body);
   const nextId = data.length + 1;
   const { status, title } = req.body.task;
   const newTask = { id: nextId, title, status };
@@ -19,4 +16,16 @@ const postTasksHandler = (req, res) => {
   res.status(201).json({ task: newTask });
 };
 
-module.exports = { getTasksHandler, postTasksHandler };
+const updateTaskHandler = (req, res) => {
+  const { status, id } = req.body.task;
+  const taskIndex = data.findIndex((t) => t.id === id);
+
+  if (taskIndex !== -1) {
+    data[taskIndex].status = status;
+    res.json({ task: data[taskIndex] });
+  } else {
+    res.status(404).json({ error: 'Task not found' });
+  }
+};
+
+module.exports = { getTasksHandler, postTasksHandler, updateTaskHandler };

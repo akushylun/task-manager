@@ -13,4 +13,8 @@ export class TasksDataService {
   addTask(task: DraftTask) {
     return this.httpClient.post<{ task: Task }>('http://localhost:3000/tasks', { task });
   }
+
+  update(task: Task) {
+    return this.httpClient.put<{ task: Task }>('http://localhost:3000/tasks', { task });
+  }
 }
