@@ -27,7 +27,7 @@ import { DraftTask, TaskStatus } from '../task-card/task';
     MatDialogClose,
   ],
   templateUrl: './task-actions-dialog.html',
-  styleUrl: './task-actions-dialog.component.css',
+  styleUrl: './task-actions-dialog.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskActionsDialog {
