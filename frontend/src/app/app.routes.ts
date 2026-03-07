@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { TaskListComponent } from './task-list/task-list.component';
+import { TaskList } from './task-list/task-list';
 
 export const routes: Routes = [
   {
@@ -9,7 +9,7 @@ export const routes: Routes = [
   },
   {
     path: 'tasks',
-    component: TaskListComponent,
+    component: TaskList,
   },
   {
     path: 'account',

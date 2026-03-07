@@ -26,11 +26,11 @@ import { DraftTask, TaskStatus } from '../task-card/task';
     MatDialogActions,
     MatDialogClose,
   ],
-  templateUrl: './task-actions-dialog.component.html',
+  templateUrl: './task-actions-dialog.html',
   styleUrl: './task-actions-dialog.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskActionsComponent {
+export class TaskActionsDialog {
   private readonly fb = inject(FormBuilder);
   private readonly dialogRef = inject(MatDialogRef);
 

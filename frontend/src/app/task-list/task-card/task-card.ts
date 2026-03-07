@@ -4,11 +4,11 @@ import { Task } from './task';
 
 @Component({
   selector: 'app-task-card',
-  templateUrl: './task-card.component.html',
-  styleUrl: './task-card.component.css',
+  templateUrl: './task-card.html',
+  styleUrl: './task-card.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatCardModule],
 })
-export class TaskCardComponent {
+export class TaskCard {
   task = input.required<Task>();
 }

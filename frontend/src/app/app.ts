@@ -3,7 +3,7 @@ import { Layout } from './layout/layout';
 @Component({
   selector: 'app-root',
   imports: [Layout],
-  templateUrl: './app.component.html',
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {}
+export class App {}

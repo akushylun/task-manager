@@ -9,16 +9,16 @@ import {
   selectInProgressTasks,
   selectPendingTasks,
 } from '../features/tasks/tasks.selectors';
-import { TaskActionsComponent } from './task-actions-dialog/task-actions-dialog.component';
+import { TaskActionsDialog } from './task-actions-dialog/task-actions-dialog';
 import { TaskStatus } from './task-card/task';
-import { TaskCardComponent } from './task-card/task-card.component';
+import { TaskCard } from './task-card/task-card';
 
 @Component({
   selector: 'app-task-list',
-  imports: [TaskCardComponent, MatButtonModule],
-  templateUrl: './task-list.component.html',
+  imports: [TaskCard, MatButtonModule],
+  templateUrl: './task-list.html',
 })
-export class TaskListComponent {
+export class TaskList {
   private readonly store = inject(Store);
   private readonly dialog = inject(MatDialog);
 
@@ -33,7 +33,7 @@ export class TaskListComponent {
 
   open() {
     this.dialog
-      .open(TaskActionsComponent)
+      .open(TaskActionsDialog)
       .afterClosed()
       .pipe(
         take(1),
