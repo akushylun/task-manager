@@ -31,7 +31,9 @@ export class TasksEffects {
     this.actions$.pipe(
       ofType(tasksActions.updateTask),
       switchMap(({ task }) => this.tasksDataService.update(task)),
-      map(({ task }) => tasksActions.taskUpdatedSuccess({ task })),
+      map(({ task }) =>
+        tasksActions.taskUpdatedSuccess({ update: { id: task.id, changes: task } }),
+      ),
     ),
   );
 }

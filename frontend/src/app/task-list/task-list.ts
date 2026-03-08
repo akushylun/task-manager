@@ -5,14 +5,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { filter, take, tap } from 'rxjs';
 import { tasksActions } from '../features/tasks/tasks.actions';
-import {
-  selectCompletedTasks,
-  selectInProgressTasks,
-  selectPendingTasks,
-} from '../features/tasks/tasks.selectors';
 import { TaskActionsDialog } from './task-actions-dialog/task-actions-dialog';
 import { Task, TaskStatus } from './task-card/task';
 import { TaskCard } from './task-card/task-card';
+import { tasksFeature } from '../features/tasks/tasks.reducer';
 
 @Component({
   selector: 'app-task-list',
@@ -24,9 +20,9 @@ export class TaskList {
   private readonly dialog = inject(MatDialog);
 
   readonly status = TaskStatus;
-  readonly pendingTasks = this.store.selectSignal(selectPendingTasks);
-  readonly inProgressTasks = this.store.selectSignal(selectInProgressTasks);
-  readonly completedTasks = this.store.selectSignal(selectCompletedTasks);
+  readonly pendingTasks = this.store.selectSignal(tasksFeature.selectPendingTasks);
+  readonly inProgressTasks = this.store.selectSignal(tasksFeature.selectInProgressTasks);
+  readonly completedTasks = this.store.selectSignal(tasksFeature.selectCompletedTasks);
 
   ngOnInit(): void {
     this.store.dispatch(tasksActions.loadTasks());

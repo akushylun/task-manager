@@ -1,32 +1,41 @@
-import { createFeature, createReducer, on, State } from '@ngrx/store';
-import { Task } from '../../task-list/task-card/task';
+import { createEntityAdapter, EntityState } from '@ngrx/entity';
+import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
+import { Task, TaskStatus } from '../../task-list/task-card/task';
 import { tasksActions } from './tasks.actions';
 
-export interface TasksState {
-  tasks: Task[];
+export interface TasksState extends EntityState<Task> {
   loading: boolean;
 }
 
-const initialState: TasksState = {
-  tasks: [],
-  loading: false,
-};
-
+export const entityAdapter = createEntityAdapter<Task>();
+export const initialState: TasksState = entityAdapter.getInitialState({ loading: false });
 export const tasksFeature = createFeature({
   name: 'tasks',
   reducer: createReducer(
     initialState,
     on(tasksActions.loadTasks, (state) => ({ ...state, loading: true })),
-    on(tasksActions.tasksLoadedSuccess, (state, { tasks }) => {
-      return { ...state, tasks, loading: false };
-    }),
-    on(tasksActions.taskAddedSuccess, (state, { task }) => {
-      const tasks = [...state.tasks, task];
-      return { ...state, tasks };
-    }),
-    on(tasksActions.taskUpdatedSuccess, (state, { task }) => {
-      const tasks = state.tasks.map((t) => (t.id === task.id ? task : t));
-      return { ...state, tasks };
-    }),
+    on(tasksActions.tasksLoadedSuccess, (state, { tasks }) =>
+      entityAdapter.setAll(tasks, { ...state, loading: false }),
+    ),
+    on(tasksActions.taskAddedSuccess, (state, { task }) => entityAdapter.addOne(task, state)),
+    on(tasksActions.taskUpdatedSuccess, (state, { update }) =>
+      entityAdapter.updateOne(update, state),
+    ),
   ),
+  extraSelectors: ({ selectTasksState }) => ({
+    ...entityAdapter.getSelectors(selectTasksState),
+    loading: createSelector(selectTasksState, (state) => state.loading),
+    selectPendingTasks: createSelector(
+      entityAdapter.getSelectors(selectTasksState).selectAll,
+      (tasks) => tasks.filter((item) => item.status === TaskStatus.Pending),
+    ),
+    selectInProgressTasks: createSelector(
+      entityAdapter.getSelectors(selectTasksState).selectAll,
+      (tasks) => tasks.filter((item) => item.status === TaskStatus.Pending),
+    ),
+    selectCompletedTasks: createSelector(
+      entityAdapter.getSelectors(selectTasksState).selectAll,
+      (tasks) => tasks.filter((item) => item.status === TaskStatus.Pending),
+    ),
+  }),
 });
