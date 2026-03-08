@@ -10,5 +10,8 @@
   </div>
 </nav>
 <main class="p-8 max-w-7xl mx-auto">
+  @if (isNavigating()) {
+    <mat-spinner class="spinner-container"></mat-spinner>
+  }
   <router-outlet />
 </main>

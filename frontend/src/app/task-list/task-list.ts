@@ -5,10 +5,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { filter, take, tap } from 'rxjs';
 import { tasksActions } from '../features/tasks/tasks.actions';
+import { tasksFeature } from '../features/tasks/tasks.reducer';
 import { TaskActionsDialog } from './task-actions-dialog/task-actions-dialog';
 import { Task, TaskStatus } from './task-card/task';
 import { TaskCard } from './task-card/task-card';
-import { tasksFeature } from '../features/tasks/tasks.reducer';
 
 @Component({
   selector: 'app-task-list',

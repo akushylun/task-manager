@@ -15,4 +15,9 @@ export const routes: Routes = [
     path: 'account',
     loadComponent: () => import('./account/account').then((c) => c.Account),
   },
+  {
+    path: 'error',
+    loadComponent: () => import('./not-found/not-found').then((c) => c.NotFound),
+  },
+  { path: '**', redirectTo: 'error' },
 ];
