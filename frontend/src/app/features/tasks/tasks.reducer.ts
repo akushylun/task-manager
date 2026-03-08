@@ -31,11 +31,11 @@ export const tasksFeature = createFeature({
     ),
     selectInProgressTasks: createSelector(
       entityAdapter.getSelectors(selectTasksState).selectAll,
-      (tasks) => tasks.filter((item) => item.status === TaskStatus.Pending),
+      (tasks) => tasks.filter((item) => item.status === TaskStatus.InProgress),
     ),
     selectCompletedTasks: createSelector(
       entityAdapter.getSelectors(selectTasksState).selectAll,
-      (tasks) => tasks.filter((item) => item.status === TaskStatus.Pending),
+      (tasks) => tasks.filter((item) => item.status === TaskStatus.Completed),
     ),
   }),
 });
