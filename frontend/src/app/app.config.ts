@@ -5,6 +5,7 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import {
+  NavigationError,
   provideRouter,
   RedirectCommand,
   Router,
@@ -25,11 +26,6 @@ export const appConfig: ApplicationConfig = {
       routes,
       withNavigationErrorHandler((error) => {
         const router = inject(Router);
-
-        if (error) {
-          console.log(error);
-        }
-
         const errorPath = router.parseUrl('/error');
         return new RedirectCommand(errorPath);
       }),

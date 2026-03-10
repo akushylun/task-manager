@@ -22,18 +22,16 @@ export class TasksEffects {
   readonly addTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(tasksActions.addTask),
-      switchMap(({ task }) => this.tasksDataService.addTask(task)),
-      map(({ task }) => tasksActions.taskAddedSuccess({ task })),
+      switchMap((task) => this.tasksDataService.addTask(task)),
+      map((task) => tasksActions.taskAddedSuccess(task)),
     ),
   );
 
   readonly updateTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(tasksActions.updateTask),
-      switchMap(({ task }) => this.tasksDataService.update(task)),
-      map(({ task }) =>
-        tasksActions.taskUpdatedSuccess({ update: { id: task.id, changes: task } }),
-      ),
+      switchMap(({ id, task }) => this.tasksDataService.update(id, task)),
+      map((task) => tasksActions.taskUpdatedSuccess({ update: { id: task.id, changes: task } })),
     ),
   );
 }

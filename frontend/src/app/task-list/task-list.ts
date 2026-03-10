@@ -38,7 +38,7 @@ export class TaskList {
       .pipe(
         take(1),
         filter((item) => item != null),
-        tap((task) => this.store.dispatch(tasksActions.addTask({ task }))),
+        tap((task) => this.store.dispatch(tasksActions.addTask(task))),
       )
       .subscribe();
   }
@@ -59,9 +59,9 @@ export class TaskList {
       event.currentIndex,
     );
 
+    const id = event.container.data[event.currentIndex].id;
     const status = event.container.id as TaskStatus;
-    const task = { ...event.container.data[event.currentIndex], status: status };
 
-    this.store.dispatch(tasksActions.updateTask({ task }));
+    this.store.dispatch(tasksActions.updateTask({ id, task: { status } }));
   }
 }

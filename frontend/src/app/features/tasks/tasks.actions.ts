@@ -7,9 +7,9 @@ export const tasksActions = createActionGroup({
   events: {
     'load tasks': emptyProps(),
     'tasks loaded success': props<{ tasks: Task[] }>(),
-    'add task': props<{ task: DraftTask }>(),
-    'task added success': props<{ task: Task }>(),
-    'update task': props<{ task: Task }>(),
+    'add task': props<DraftTask>(),
+    'task added success': props<Task>(),
+    'update task': props<{ id: Task['id']; task: Partial<DraftTask> }>(),
     'task updated success': props<{ update: Update<Task> }>(),
   },
 });

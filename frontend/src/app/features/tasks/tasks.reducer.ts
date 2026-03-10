@@ -17,7 +17,7 @@ export const tasksFeature = createFeature({
     on(tasksActions.tasksLoadedSuccess, (state, { tasks }) =>
       entityAdapter.setAll(tasks, { ...state, loading: false }),
     ),
-    on(tasksActions.taskAddedSuccess, (state, { task }) => entityAdapter.addOne(task, state)),
+    on(tasksActions.taskAddedSuccess, (state, task) => entityAdapter.addOne(task, state)),
     on(tasksActions.taskUpdatedSuccess, (state, { update }) =>
       entityAdapter.updateOne(update, state),
     ),
