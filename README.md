@@ -7,7 +7,7 @@ A pet project for managing tasks, built with **Node.js** and **Angular**.
 ### Backend
 
 - **Node.js** - Server-side runtime
-- **Express.js** - Web application framework
+- **NestJS** - Progressive Node.js framework
 
 ### Frontend
 
