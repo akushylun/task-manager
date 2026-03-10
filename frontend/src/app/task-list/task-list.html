@@ -11,7 +11,12 @@
       class="flex flex-col gap-4 flex-1"
     >
       @for (task of pendingTasks(); track task.id) {
-        <app-task-card [task]="task" [cdkDragData]="task" cdkDrag></app-task-card>
+        <app-task-card
+          [task]="task"
+          (delete)="onDelete($event)"
+          [cdkDragData]="task"
+          cdkDrag
+        ></app-task-card>
       }
     </div>
   </section>
@@ -28,7 +33,12 @@
       class="flex flex-col gap-4 flex-1"
     >
       @for (task of inProgressTasks(); track task.id) {
-        <app-task-card [task]="task" [cdkDragData]="task" cdkDrag></app-task-card>
+        <app-task-card
+          [task]="task"
+          (delete)="onDelete($event)"
+          [cdkDragData]="task"
+          cdkDrag
+        ></app-task-card>
       }
     </div>
   </section>
@@ -45,7 +55,12 @@
       class="flex flex-col gap-4 flex-1"
     >
       @for (task of completedTasks(); track task.id) {
-        <app-task-card [task]="task" [cdkDragData]="task" cdkDrag></app-task-card>
+        <app-task-card
+          [task]="task"
+          (delete)="onDelete($event)"
+          [cdkDragData]="task"
+          cdkDrag
+        ></app-task-card>
       }
     </div>
   </section>

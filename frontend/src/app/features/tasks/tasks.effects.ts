@@ -34,4 +34,18 @@ export class TasksEffects {
       map((task) => tasksActions.taskUpdatedSuccess({ update: { id: task.id, changes: task } })),
     ),
   );
+
+  readonly deleteTask$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(tasksActions.deleteTask),
+      switchMap(({ id }) =>
+        this.tasksDataService.delete(id).pipe(
+          map(() => ({
+            id,
+          })),
+        ),
+      ),
+      map((id) => tasksActions.taskDeletedSuccess(id)),
+    ),
+  );
 }

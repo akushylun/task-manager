@@ -21,6 +21,7 @@ export const tasksFeature = createFeature({
     on(tasksActions.taskUpdatedSuccess, (state, { update }) =>
       entityAdapter.updateOne(update, state),
     ),
+    on(tasksActions.taskDeletedSuccess, (state, { id }) => entityAdapter.removeOne(id, state)),
   ),
   extraSelectors: ({ selectTasksState }) => ({
     ...entityAdapter.getSelectors(selectTasksState),

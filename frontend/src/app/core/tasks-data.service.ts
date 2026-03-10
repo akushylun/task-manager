@@ -18,4 +18,8 @@ export class TasksDataService {
   update(id: Task['id'], task: Partial<DraftTask>) {
     return this.httpClient.put<Task>(`${this.baseUrl}/${id}`, task);
   }
+
+  delete(id: Task['id']) {
+    return this.httpClient.delete<Task>(`${this.baseUrl}/${id}`);
+  }
 }

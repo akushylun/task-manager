@@ -64,4 +64,12 @@ export class TaskList {
 
     this.store.dispatch(tasksActions.updateTask({ id, task: { status } }));
   }
+
+  /**
+   * Delete task
+   * @param id
+   */
+  onDelete(id: Task['id']) {
+    this.store.dispatch(tasksActions.deleteTask({ id }));
+  }
 }

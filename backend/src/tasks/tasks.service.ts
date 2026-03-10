@@ -23,4 +23,12 @@ export class TasksService {
     }
     return this.taskRepository.save({ ...task, ...value });
   }
+
+  async removeTask(id: Task['id']){
+   const task = await this.taskRepository.findOneBy({ id });
+    if (!task) {
+      throw new NotFoundException('not found task');
+    }
+    return this.taskRepository.remove(task);
+  }
 }

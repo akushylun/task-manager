@@ -11,5 +11,7 @@ export const tasksActions = createActionGroup({
     'task added success': props<Task>(),
     'update task': props<{ id: Task['id']; task: Partial<DraftTask> }>(),
     'task updated success': props<{ update: Update<Task> }>(),
+    'delete task': props<{ id: Task['id'] }>(),
+    'task deleted success': props<{ id: Task['id'] }>(),
   },
 });
