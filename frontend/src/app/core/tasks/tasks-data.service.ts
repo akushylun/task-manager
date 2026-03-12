@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { DraftTask, Task } from '../task-list/task-card/task';
+import { DraftTask, Task } from './task';
+import { API_URL } from '../api-url';
 
 @Injectable({ providedIn: 'root' })
 export class TasksDataService {
-  private readonly baseUrl = 'http://localhost:3000/tasks';
+  private readonly baseUrl = inject(API_URL) + '/tasks';
   private readonly httpClient = inject(HttpClient);
 
   getTasks() {

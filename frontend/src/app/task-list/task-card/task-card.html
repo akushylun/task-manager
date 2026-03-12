@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-content>
-    <div class="flex justify-between items-center">
-      <h3 class="text-base font-medium">{{ task().title }}</h3>
+    <div class="task-card-header">
+      <h3 class="task-title">{{ task().title }}</h3>
       <button matIconButton color="warn" (click)="delete.emit(task().id)">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -9,7 +9,7 @@
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          class="w-6 h-6"
+          class="delete-icon"
         >
           <path
             stroke-linecap="round"

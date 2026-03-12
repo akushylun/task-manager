@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { Task } from './task';
-
+import { Task } from '../../core/tasks/task';
 @Component({
   selector: 'app-task-card',
   templateUrl: './task-card.html',

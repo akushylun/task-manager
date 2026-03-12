@@ -1,6 +1,6 @@
-<div class="flex flex-col md:flex-row gap-4 md:justify-between">
-  <section class="flex flex-col gap-4 flex-1">
-    <h2 class="text-2xl font-semibold pb-4 border-b-2 border-gray-200">TODO:</h2>
+<div class="task-board">
+  <section class="task-column">
+    <h2 class="task-column-header">TODO:</h2>
     <div
       cdkDropList
       #todoList="cdkDropList"
@@ -8,7 +8,7 @@
       [cdkDropListData]="pendingTasks()"
       [cdkDropListConnectedTo]="[inProgressList, doneList]"
       (cdkDropListDropped)="drop($event)"
-      class="flex flex-col gap-4 flex-1"
+      class="task-list"
     >
       @for (task of pendingTasks(); track task.id) {
         <app-task-card
@@ -21,8 +21,8 @@
     </div>
   </section>
 
-  <section class="flex flex-col gap-4 flex-1">
-    <h2 class="text-2xl font-semibold pb-4 border-b-2 border-gray-200">IN PROGRESS:</h2>
+  <section class="task-column">
+    <h2 class="task-column-header">IN PROGRESS:</h2>
     <div
       cdkDropList
       #inProgressList="cdkDropList"
@@ -30,7 +30,7 @@
       [cdkDropListData]="inProgressTasks()"
       [cdkDropListConnectedTo]="[todoList, doneList]"
       (cdkDropListDropped)="drop($event)"
-      class="flex flex-col gap-4 flex-1"
+      class="task-list"
     >
       @for (task of inProgressTasks(); track task.id) {
         <app-task-card
@@ -43,8 +43,8 @@
     </div>
   </section>
 
-  <section class="flex flex-col gap-4 flex-1">
-    <h2 class="text-2xl font-semibold pb-4 border-b-2 border-gray-200">DONE:</h2>
+  <section class="task-column">
+    <h2 class="task-column-header">DONE:</h2>
     <div
       cdkDropList
       #doneList="cdkDropList"
@@ -52,7 +52,7 @@
       [cdkDropListData]="completedTasks()"
       [cdkDropListConnectedTo]="[todoList, inProgressList]"
       (cdkDropListDropped)="drop($event)"
-      class="flex flex-col gap-4 flex-1"
+      class="task-list"
     >
       @for (task of completedTasks(); track task.id) {
         <app-task-card
@@ -66,4 +66,6 @@
   </section>
 </div>
 
-<button matButton="filled" color="primary" class="mt-15" (click)="open()">Add a card</button>
+<button matButton="filled" color="primary" class="add-task-button" (click)="open()">
+  Add a card
+</button>

@@ -1,6 +1,7 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { DraftTask, Task } from '../../task-list/task-card/task';
+
 import { Update } from '@ngrx/entity';
+import { DraftTask, Task } from '../../core/tasks/task';
 
 export const tasksActions = createActionGroup({
   source: 'tasks',

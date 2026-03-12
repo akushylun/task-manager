@@ -7,13 +7,15 @@ import { filter, take, tap } from 'rxjs';
 import { tasksActions } from '../features/tasks/tasks.actions';
 import { tasksFeature } from '../features/tasks/tasks.reducer';
 import { TaskActionsDialog } from './task-actions-dialog/task-actions-dialog';
-import { Task, TaskStatus } from './task-card/task';
+
 import { TaskCard } from './task-card/task-card';
+import { Task, TaskStatus } from '../core/tasks/task';
 
 @Component({
   selector: 'app-task-list',
   imports: [TaskCard, MatButtonModule, CdkDrag, CdkDropList],
   templateUrl: './task-list.html',
+  styleUrl: './task-list.css',
 })
 export class TaskList {
   private readonly store = inject(Store);

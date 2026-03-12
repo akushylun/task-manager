@@ -10,3 +10,19 @@ mat-card {
 mat-card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+.task-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-title {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.delete-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}

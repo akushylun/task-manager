@@ -9,3 +9,13 @@
   transform: translate(-50%, -50%);
   z-index: 1000;
 }
+
+.toolbar {
+  display: flex;
+  gap: 16px;
+  background-color: var(--mat-sys-primary-container);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map, switchMap } from 'rxjs';
-import { TasksDataService } from '../../core/tasks-data.service';
+
 import { tasksActions } from './tasks.actions';
+import { TasksDataService } from '../../core/tasks/tasks-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class TasksEffects {

@@ -1,6 +1,7 @@
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
-import { Task, TaskStatus } from '../../task-list/task-card/task';
+
+import { Task, TaskStatus } from '../../core/tasks/task';
 import { tasksActions } from './tasks.actions';
 
 export interface TasksState extends EntityState<Task> {
