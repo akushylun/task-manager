@@ -1,0 +1,24 @@
+### Sign Up Request
+POST http://localhost:3000/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test10@gmail.com",
+  "password": "password123"
+}
+
+### Sign In Request
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+  "email": "test10@gmail.com",
+  "password": "password123"
+}
+
+### Sign out 
+POST http://localhost:3000/auth/signout
+
+
+### Me request
+GET http://localhost:3000/auth/me

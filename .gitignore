@@ -11,6 +11,10 @@ backend/build/
 # environment files
 backend/.env
 
+# database
+backend/db.sqlite
+backend/*.db
+
 # logs
 backend/npm-debug.log*
 backend/yarn-debug.log*
