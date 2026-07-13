@@ -29,6 +29,7 @@ task-manager/
 
 - Node.js (v14 or higher)
 - npm or yarn
+- PostgreSQL (a database named `taskmanagement` by default)
 
 ### Installation
 
@@ -37,7 +38,27 @@ task-manager/
 ```bash
 cd backend
 npm install
-npm run dev
+```
+
+Create a `.env` file from the template and fill in your values:
+
+```bash
+cp .env.example .env
+```
+
+| Variable         | Description                          |
+| ---------------- | ------------------------------------ |
+| `DB_HOST`        | PostgreSQL host (default `localhost`) |
+| `DB_PORT`        | PostgreSQL port (default `5432`)      |
+| `DB_USERNAME`    | Database user                         |
+| `DB_PASSWORD`    | Database password                     |
+| `DB_NAME`        | Database name                         |
+| `SESSION_SECRET` | Secret used to sign the session cookie (required) |
+
+Then start the dev server:
+
+```bash
+npm run start:dev
 ```
 
 #### Frontend
