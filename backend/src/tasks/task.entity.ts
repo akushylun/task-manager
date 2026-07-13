@@ -1,5 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
+import { User } from 'src/auth/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Task {
@@ -11,4 +11,7 @@ export class Task {
 
   @Column()
   status: 'pending' | 'in-progress' | 'completed';
+
+  @ManyToOne(() => User, (user) => user.tasks)
+  user: User;
 }
