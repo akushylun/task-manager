@@ -1,11 +1,12 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
+import { TaskStatus } from '../task-status.enum';
 
 export class UpdateTaskDto {
   @IsString()
-  @IsOptional()
+  @MinLength(1)
+  @MaxLength(200)
   title: string;
 
-  @IsString()
-  @IsOptional()
-  status: 'pending' | 'in-progress' | 'completed';
+  @IsEnum(TaskStatus)
+  status: TaskStatus;
 }
