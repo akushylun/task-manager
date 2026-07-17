@@ -12,6 +12,8 @@ import { CreateTaskDto } from './dtos/create-task.dto';
 import { UpdateTaskDto } from './dtos/update-task.dto';
 import { TasksService } from './tasks.service';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { CurrentUser } from 'src/decorators/current-user/current-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @UseGuards(AuthGuard)
 @Controller('tasks')
@@ -24,8 +26,8 @@ export class TasksController {
   }
 
   @Post()
-  createTask(@Body() body: CreateTaskDto) {
-    return this.tasksService.createTask(body);
+  createTask(@Body() body: CreateTaskDto, @CurrentUser() user: User) {
+    return this.tasksService.createTask(body, user);
   }
 
   @Put('/:id')
