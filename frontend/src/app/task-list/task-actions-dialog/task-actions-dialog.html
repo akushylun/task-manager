@@ -3,6 +3,9 @@
   <mat-form-field class="form-field">
     <mat-label>Task title</mat-label>
     <input #input matInput formControlName="title" type="text" placeholder="Enter task title" />
+    @if (form.controls.title.hasError('maxlength')) {
+      <mat-error>Title must be 200 characters or fewer</mat-error>
+    }
   </mat-form-field>
   <mat-form-field class="form-field">
     <mat-label>Type</mat-label>

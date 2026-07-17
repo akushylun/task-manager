@@ -1,1 +1,24 @@
-<p>sign-up works!</p>
+<div class="signup-container">
+  <form class="signup-card" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h1 class="signup-header">Sign Up</h1>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email:</mat-label>
+      <input matInput type="email" id="email" formControlName="email" />
+      @if (form.controls.email.hasError('email') && !form.controls.email.hasError('required')) {
+        <mat-error>Enter a valid email</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" id="password" formControlName="password" />
+    </mat-form-field>
+
+    <button matButton="filled" color="accent" type="submit" [disabled]="form.invalid">Sign Up</button>
+
+    <p class="signup-footer">
+      Already have an account? <a routerLink="/login">Login</a>
+    </p>
+  </form>
+</div>

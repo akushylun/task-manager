@@ -37,7 +37,7 @@ export class TaskActionsDialog {
   readonly add = output<DraftTask>();
   readonly status = TaskStatus;
   readonly form = this.fb.group({
-    title: this.fb.control('', Validators.required),
+    title: this.fb.control('', [Validators.required, Validators.maxLength(200)]),
     status: this.fb.control('', Validators.required),
   });
 

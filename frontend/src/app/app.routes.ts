@@ -23,6 +23,10 @@ export const routes: Routes = [
     loadComponent: () => import('./login/login').then((c) => c.Login),
   },
   {
+    path: 'signup',
+    loadComponent: () => import('./sign-up/sign-up').then((c) => c.SignUp),
+  },
+  {
     path: 'error',
     loadComponent: () => import('./not-found/not-found').then((c) => c.NotFound),
   },

@@ -1,0 +1,25 @@
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.signup-header {
+  text-align: center;
+}
+
+.signup-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 50px;
+  background-color: var(--mat-sys-primary-container);
+  border-radius: 8px;
+  min-width: 400px;
+}
+
+.signup-footer {
+  text-align: center;
+  margin: 0;
+}
