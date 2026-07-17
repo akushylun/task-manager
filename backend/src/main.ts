@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import session from 'express-session';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,7 @@ async function bootstrap() {
       },
     }),
   );
+  app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
     origin: 'http://localhost:4200',
     credentials: true,
