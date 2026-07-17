@@ -12,6 +12,8 @@
       <input matInput type="password" id="password" formControlName="password" />
     </mat-form-field>
 
-    <button matButton="filled" color="accent" type="submit">Login</button>
+    <button matButton="filled" color="accent" type="submit" [disabled]="form.invalid">Login</button>
+
+    <p class="login-footer">Don't have an account? <a routerLink="/signup">Sign up</a></p>
   </form>
 </div>

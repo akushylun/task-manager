@@ -18,3 +18,8 @@
   border-radius: 8px;
   min-width: 400px;
 }
+
+.login-footer {
+  text-align: center;
+  margin: 0;
+}

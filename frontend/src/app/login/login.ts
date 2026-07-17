@@ -4,14 +4,14 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { take } from 'rxjs';
 import { UserService } from '../core/user/user.service';
 import { AuthDataService } from '../core/auth/auth-data.service';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
