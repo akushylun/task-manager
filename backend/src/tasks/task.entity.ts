@@ -1,16 +1,17 @@
 import { User } from 'src/auth/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { TaskStatus } from './task-status.enum';
 
 @Entity()
 export class Task {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 200 })
   title: string;
 
-  @Column()
-  status: 'pending' | 'in-progress' | 'completed';
+  @Column({ type: 'enum', enum: TaskStatus })
+  status: TaskStatus;
 
   @ManyToOne(() => User, (user) => user.tasks)
   user: User;

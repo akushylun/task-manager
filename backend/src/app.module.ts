@@ -12,6 +12,7 @@ import { User } from './auth/user.entity';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TasksModule,
+    AuthModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -25,7 +26,6 @@ import { User } from './auth/user.entity';
         entities: [Task, User],
       }),
     }),
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

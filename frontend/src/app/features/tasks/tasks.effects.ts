@@ -23,7 +23,7 @@ export class TasksEffects {
   readonly addTask$ = createEffect(() =>
     this.actions$.pipe(
       ofType(tasksActions.addTask),
-      switchMap((task) => this.tasksDataService.addTask(task)),
+      switchMap(({ status, title }) => this.tasksDataService.addTask({ status, title })),
       map((task) => tasksActions.taskAddedSuccess(task)),
     ),
   );
