@@ -21,8 +21,8 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Get()
-  findAll() {
-    return this.tasksService.findAll();
+  findAll(@CurrentUser() user: User) {
+    return this.tasksService.findAll(user);
   }
 
   @Post()

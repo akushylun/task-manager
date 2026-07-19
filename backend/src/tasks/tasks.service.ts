@@ -10,8 +10,8 @@ export class TasksService {
     @InjectRepository(Task) private readonly taskRepository: Repository<Task>,
   ) {}
 
-  findAll() {
-    return this.taskRepository.find();
+  findAll(user: User) {
+    return this.taskRepository.findBy({ user });
   }
 
   createTask(value: Pick<Task, 'title' | 'status'>, user: User) {
