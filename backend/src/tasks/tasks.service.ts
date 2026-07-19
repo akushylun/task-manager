@@ -19,16 +19,16 @@ export class TasksService {
     return this.taskRepository.save(task);
   }
 
-  async updateTask(id: Task['id'], value: Partial<Task>) {
-    const task = await this.taskRepository.findOneBy({ id });
+  async updateTask(id: Task['id'], value: Partial<Task>, user: User) {
+    const task = await this.taskRepository.findOneBy({ id, user });
     if (!task) {
       throw new NotFoundException('not found task');
     }
     return this.taskRepository.save({ ...task, ...value });
   }
 
-  async removeTask(id: Task['id']) {
-    const task = await this.taskRepository.findOneBy({ id });
+  async removeTask(id: Task['id'], user: User) {
+    const task = await this.taskRepository.findOneBy({ id, user });
     if (!task) {
       throw new NotFoundException('not found task');
     }

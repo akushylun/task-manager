@@ -31,12 +31,16 @@ export class TasksController {
   }
 
   @Put('/:id')
-  updateTask(@Param('id') id: string, @Body() body: UpdateTaskDto) {
-    return this.tasksService.updateTask(parseInt(id), body);
+  updateTask(
+    @Param('id') id: string,
+    @Body() body: UpdateTaskDto,
+    @CurrentUser() user: User,
+  ) {
+    return this.tasksService.updateTask(parseInt(id), body, user);
   }
 
   @Delete('/:id')
-  removeTask(@Param('id') id: string) {
-    return this.tasksService.removeTask(parseInt(id));
+  removeTask(@Param('id') id: string, @CurrentUser() user: User) {
+    return this.tasksService.removeTask(parseInt(id), user);
   }
 }
