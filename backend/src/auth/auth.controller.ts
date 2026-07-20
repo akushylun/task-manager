@@ -3,7 +3,6 @@ import {
   Body,
   Controller,
   Get,
-  NotFoundException,
   Post,
   Session,
   UnauthorizedException,
@@ -45,7 +44,7 @@ export class AuthController {
     );
 
     if (!isValidPass) {
-      return new UnauthorizedException('invalid credentials');
+      throw new UnauthorizedException('invalid credentials');
     }
 
     session.userId = user.id;

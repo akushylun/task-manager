@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -30,13 +30,7 @@ export class AuthService {
     return this.repo.save(user);
   }
 
-  async isValidPassword(password: string, hashPassword: string) {
-    const passwordHash = await bcrypt.compare(password, hashPassword);
-
-    if (!passwordHash) {
-      throw new NotFoundException('invalid password');
-    }
-
-    return passwordHash;
+  isValidPassword(password: string, hashPassword: string) {
+    return bcrypt.compare(password, hashPassword);
   }
 }
