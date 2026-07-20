@@ -11,7 +11,6 @@ import {
 import { CreateTaskDto } from './dtos/create-task.dto';
 import { UpdateTaskDto } from './dtos/update-task.dto';
 import { TasksService } from './tasks.service';
-import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { CurrentUser } from 'src/decorators/current-user/current-user.decorator';
 import { User } from 'src/auth/user.entity';
 import { Roles } from 'src/decorators/roles/roles.decorator';
@@ -19,7 +18,6 @@ import { Role } from 'src/auth/role.enum';
 import { RolesGuard } from 'src/guards/roles/roles.guard';
 
 @Roles(Role.User)
-@UseGuards(AuthGuard)
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
