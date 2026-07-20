@@ -1,6 +1,6 @@
-import { Exclude } from 'class-transformer';
 import { Task } from 'src/tasks/task.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Role } from './role.enum';
 
 @Entity()
 export class User {
@@ -11,8 +11,10 @@ export class User {
   email: string;
 
   @Column()
-  @Exclude()
   password: string;
+
+  @Column({ default: Role.User })
+  role: Role;
 
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];

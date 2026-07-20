@@ -15,5 +15,6 @@ export class UpdateTaskDto {
   title: string;
 
   @IsEnum(TaskStatus)
+  @IsOptional()
   status: TaskStatus;
 }

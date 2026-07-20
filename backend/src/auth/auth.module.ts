@@ -16,5 +16,6 @@ import { CurrentUserInterceptor } from 'src/interceptors/current-user/current-us
     },
   ],
   imports: [TypeOrmModule.forFeature([User])],
+  exports: [AuthService],
 })
 export class AuthModule {}
