@@ -13,9 +13,6 @@ export class Task {
   @Column({ type: 'enum', enum: TaskStatus })
   status: TaskStatus;
 
-  @Column({ type: 'date', nullable: true })
-  dueDate: Date | null;
-
-  @ManyToOne(() => User, (user) => user.tasks)
+  @ManyToOne(() => User, (user) => user.tasks, { onDelete: 'CASCADE' })
   user: User;
 }
