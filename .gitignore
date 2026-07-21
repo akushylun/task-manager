@@ -12,7 +12,6 @@ backend/build/
 backend/.env
 
 # database
-backend/db.sqlite
 backend/*.db
 
 # logs

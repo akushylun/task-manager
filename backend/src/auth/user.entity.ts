@@ -13,7 +13,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ default: Role.User })
+  @Column({ type: 'enum', enum: Role, default: Role.User })
   role: Role;
 
   @OneToMany(() => Task, (task) => task.user)
