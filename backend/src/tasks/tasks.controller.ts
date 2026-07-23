@@ -15,7 +15,10 @@ import { Roles } from 'src/decorators/roles/roles.decorator';
 import { CreateTaskDto } from './dtos/create-task.dto';
 import { UpdateTaskDto } from './dtos/update-task.dto';
 import { TasksService } from './tasks.service';
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('tasks')
+@ApiCookieAuth()
 @Roles(Role.User)
 @Controller('tasks')
 export class TasksController {

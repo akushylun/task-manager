@@ -14,12 +14,15 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { User } from './user.entity';
+import { ApiCookieAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 @Serialize(UserDto)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiOkResponse({ type: UserDto })
   @Get('/me')
   async me(@CurrentUser() user: User) {
     if (!user) {
