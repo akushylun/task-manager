@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/auth/user.entity';
@@ -26,13 +31,13 @@ export class AuthGuard implements CanActivate {
     }>();
 
     if (!request.session.userId) {
-      return false;
+      throw new UnauthorizedException();
     }
 
     const user = await this.authService.findOneById(request.session.userId);
 
     if (!user) {
-      return false;
+      throw new UnauthorizedException();
     }
 
     request.currentUser = user;
