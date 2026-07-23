@@ -3,10 +3,24 @@ import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import session from 'express-session';
 import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Task manager')
+    .setDescription('Task manager API description')
+    .setVersion('1.0')
+    .addTag('tasks')
+    .addTag('auth')
+    .addCookieAuth('connect.sid')
+    .build();
+  const documentFactory = () =>
+    SwaggerModule.createDocument(app, swaggerConfig);
+
+  SwaggerModule.setup('api', app, documentFactory);
+
   app.use(
     session({
       secret: config.getOrThrow<string>('SESSION_SECRET'),
