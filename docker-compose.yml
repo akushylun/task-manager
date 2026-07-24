@@ -1,0 +1,63 @@
+# The whole stack: database + API + frontend.
+#
+#   docker compose up --build
+#
+# Compose creates one shared network and registers each service under its own
+# name as a DNS hostname. That is why the API reaches the database at
+# `postgres` rather than `localhost` — inside a container, `localhost` is that
+# container itself.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      # Named volume: the ONE stateful service. Without this, every
+      # `docker compose down` would destroy all users and tasks.
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      # "Container started" != "Postgres is accepting connections". Postgres
+      # boots, runs recovery, and only then listens. `api` waits for this.
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      # Only for connecting with psql/a GUI from the host. The API does not
+      # need this — it talks over the internal network.
+      - '5432:5432'
+
+  api:
+    build:
+      context: ./backend
+    environment:
+      DB_HOST: postgres # the service name, NOT localhost
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      SESSION_SECRET: ${SESSION_SECRET}
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        # Wait for the healthcheck to pass, not merely for the container to
+        # exist — otherwise migrations race the database and crash on startup.
+        condition: service_healthy
+    ports:
+      - '3000:3000'
+
+  frontend:
+    build:
+      context: ./frontend
+    depends_on:
+      - api
+    ports:
+      # Host 4200 -> nginx's port 80 in the container. Port 4200 keeps the
+      # backend's existing CORS allow-list (http://localhost:4200) valid.
+      - '4200:80'
+
+volumes:
+  postgres-data:
