@@ -30,7 +30,13 @@ async function bootstrap() {
         path: '/',
         maxAge: 1000 * 60 * 60 * 24,
         sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
+        // A `Secure` cookie is only sent over HTTPS — and express-session
+        // silently drops the Set-Cookie entirely on a plain-HTTP connection.
+        // "Secure" is about the transport (HTTPS), NOT about NODE_ENV, so it
+        // gets its own switch: false for local HTTP (docker compose), true
+        // only once TLS terminates in front of the app. Behind a TLS-
+        // terminating proxy you also need app.set('trust proxy', 1).
+        secure: config.get<string>('COOKIE_SECURE') === 'true',
       },
     }),
   );

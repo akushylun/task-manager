@@ -1,0 +1,16 @@
+# Host node_modules holds macOS/arm64 native binaries (bcrypt) that would
+# break inside a linux container — and it's huge. Never copy it in; the
+# image installs its own with `npm ci`.
+node_modules
+
+# Build output is produced inside the image by `nest build`.
+dist
+
+# Secrets must never be baked into an image layer.
+.env
+.env.*
+
+# Not needed at build/runtime.
+.git
+coverage
+*.log

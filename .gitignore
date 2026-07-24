@@ -11,6 +11,9 @@ backend/build/
 # environment files
 backend/.env
 
+# root env consumed by docker compose (contains real secrets)
+/.env
+
 # database
 backend/*.db
 
