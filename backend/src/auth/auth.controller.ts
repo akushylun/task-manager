@@ -7,9 +7,9 @@ import {
   Session,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CurrentUser } from 'src/decorators/current-user/current-user.decorator';
-import { Public } from 'src/decorators/public/public.decorator';
-import { Serialize } from 'src/interceptors/serialize/serialize.interceptor';
+import { CurrentUser } from '../decorators/current-user/current-user.decorator';
+import { Public } from '../decorators/public/public.decorator';
+import { Serialize } from '../interceptors/serialize/serialize.interceptor';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserDto } from './dtos/user.dto';
