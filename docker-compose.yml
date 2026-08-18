@@ -30,6 +30,17 @@ services:
       # need this — it talks over the internal network.
       - '5432:5432'
 
+  redis:
+    image: redis:7.4-alpine
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
   api:
     build:
       context: ./backend
@@ -41,10 +52,17 @@ services:
       DB_NAME: ${DB_NAME}
       SESSION_SECRET: ${SESSION_SECRET}
       NODE_ENV: production
+      # Topology, not a secret — hardcoded here rather than injected from .env.
+      # `redis` is the compose service name, resolved over the shared network,
+      # for the same reason DB_HOST is `postgres`: inside a container
+      # `localhost` is that container itself.
+      REDIS_URL: redis://redis:6379
     depends_on:
       postgres:
         # Wait for the healthcheck to pass, not merely for the container to
         # exist — otherwise migrations race the database and crash on startup.
+        condition: service_healthy
+      redis:
         condition: service_healthy
     ports:
       - '3000:3000'

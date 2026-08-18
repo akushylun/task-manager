@@ -15,6 +15,11 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { User } from './user.entity';
 import { ApiCookieAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+// `AppSession` must be a type-only import: with isolatedModules +
+// emitDecoratorMetadata, a type used in a decorated signature cannot come from
+// a value import (TS1272).
+import type { AppSession } from './session';
+import { destroySession } from './session';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -34,7 +39,7 @@ export class AuthController {
 
   @Public()
   @Post('/signin')
-  async signIn(@Body() body: CreateUserDto, @Session() session: any) {
+  async signIn(@Body() body: CreateUserDto, @Session() session: AppSession) {
     const user = await this.authService.findOne(body.email);
 
     if (!user) {
@@ -56,7 +61,7 @@ export class AuthController {
 
   @Public()
   @Post('/signup')
-  async signUp(@Body() body: CreateUserDto, @Session() session: any) {
+  async signUp(@Body() body: CreateUserDto, @Session() session: AppSession) {
     const user = await this.authService.findOne(body.email);
 
     if (user) {
@@ -70,8 +75,11 @@ export class AuthController {
 
   @Public()
   @Post('/signout')
-  signOut(@Session() session: any) {
-    session.userId = null;
+  async signOut(@Session() session: AppSession) {
+    // destroy() DELs the key in Redis. Assigning `userId = null` only emptied
+    // the session and left it in the store until its TTL expired — and, since
+    // that counts as a modification, refreshed the TTL on the way out.
+    await destroySession(session);
     return true;
   }
 }
