@@ -1,5 +1,5 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
@@ -15,6 +15,7 @@ import { Task, TaskStatus } from '../core/tasks/task';
   selector: 'app-task-list',
   imports: [TaskCard, MatButtonModule, CdkDrag, CdkDropList],
   templateUrl: './task-list.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './task-list.css',
 })
 export class TaskList {

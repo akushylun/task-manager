@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -13,6 +13,7 @@ import { AuthDataService } from '../core/auth/auth-data.service';
   selector: 'app-sign-up',
   imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, RouterLink],
   templateUrl: './sign-up.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './sign-up.css',
 })
 export class SignUp {
