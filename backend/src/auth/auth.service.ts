@@ -5,8 +5,8 @@ import { DataSource, Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
 
 import * as bcrypt from 'bcrypt';
-import { Task } from 'src/tasks/task.entity';
-import { TaskStatus } from 'src/tasks/task-status.enum';
+import { Task } from '../tasks/task.entity';
+import { TaskStatus } from '../tasks/task-status.enum';
 
 @Injectable()
 export class AuthService {

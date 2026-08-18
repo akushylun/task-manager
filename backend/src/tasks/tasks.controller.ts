@@ -8,10 +8,10 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Role } from 'src/auth/role.enum';
-import { User } from 'src/auth/user.entity';
-import { CurrentUser } from 'src/decorators/current-user/current-user.decorator';
-import { Roles } from 'src/decorators/roles/roles.decorator';
+import { Role } from '../auth/role.enum';
+import { User } from '../auth/user.entity';
+import { CurrentUser } from '../decorators/current-user/current-user.decorator';
+import { Roles } from '../decorators/roles/roles.decorator';
 import { CreateTaskDto } from './dtos/create-task.dto';
 import { UpdateTaskDto } from './dtos/update-task.dto';
 import { TasksService } from './tasks.service';
