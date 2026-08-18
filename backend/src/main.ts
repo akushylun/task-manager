@@ -4,6 +4,8 @@ import { AppModule } from './app.module';
 import session from 'express-session';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { createClient } from 'redis';
+import { RedisStore } from 'connect-redis';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,11 +20,17 @@ async function bootstrap() {
     .build();
   const documentFactory = () =>
     SwaggerModule.createDocument(app, swaggerConfig);
+  const redisClient = createClient({
+    url: config.getOrThrow<string>('REDIS_URL'),
+  });
+  redisClient.on('error', (err) => console.error('Redis error', err));
+  await redisClient.connect();
 
   SwaggerModule.setup('api', app, documentFactory);
 
   app.use(
     session({
+      store: new RedisStore({ client: redisClient, disableTouch: true }),
       secret: config.getOrThrow<string>('SESSION_SECRET'),
       resave: false,
       saveUninitialized: false,
