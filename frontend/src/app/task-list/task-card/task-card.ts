@@ -10,6 +10,6 @@ import { Task } from '../../core/tasks/task';
   imports: [MatCardModule, MatButtonModule],
 })
 export class TaskCard {
-  task = input.required<Task>();
-  delete = output<Task['id']>();
+  readonly task = input.required<Task>();
+  readonly delete = output<Task['id']>();
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { User } from '../auth/auth';
 
@@ -6,17 +6,16 @@ import { User } from '../auth/auth';
   providedIn: 'root',
 })
 export class UserService {
-  private readonly user$$ = new BehaviorSubject<User | null>(null);
+  private readonly _user = signal<User | null>(null);
 
-  set(user: User | null) {
-    this.user$$.next(user);
+  readonly user = this._user.asReadonly();
+  readonly isAuthenticated = computed(() => this.user() !== null);
+
+  set(user: User) {
+    return this._user.set(user);
   }
 
-  get() {
-    return this.user$$.asObservable();
-  }
-
-  getValue() {
-    return this.user$$.value;
+  clear() {
+    return this._user.set(null);
   }
 }

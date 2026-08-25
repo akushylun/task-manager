@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, resource } from '@angular/core';
 import { User } from './auth';
 import { API_URL } from '../api-url';
 

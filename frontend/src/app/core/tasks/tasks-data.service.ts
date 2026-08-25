@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { DraftTask, Task } from './task';
 import { API_URL } from '../api-url';
+import { DraftTask, Task } from './task';
 
 @Injectable({ providedIn: 'root' })
 export class TasksDataService {

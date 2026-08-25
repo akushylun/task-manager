@@ -1,71 +1,88 @@
-<div class="task-board">
-  <section class="task-column">
-    <h2 class="task-column-header">TODO:</h2>
-    <div
-      cdkDropList
-      #todoList="cdkDropList"
-      [id]="status.Pending"
-      [cdkDropListData]="pendingTasks()"
-      [cdkDropListConnectedTo]="[inProgressList, doneList]"
-      (cdkDropListDropped)="drop($event)"
-      class="task-list"
-    >
-      @for (task of pendingTasks(); track task.id) {
-        <app-task-card
-          [task]="task"
-          (delete)="onDelete($event)"
-          [cdkDragData]="task"
-          cdkDrag
-        ></app-task-card>
-      }
-    </div>
-  </section>
+@if (isLoading()) {
+  <div class="task-board-status">
+    <mat-spinner diameter="48" />
+  </div>
+} @else if (error()) {
+  <div class="task-board-status">
+    <p class="task-board-error">Could not load your tasks.</p>
+    <button matButton="filled" color="primary" (click)="retry()">Try again</button>
+  </div>
+} @else {
+  <div class="task-board">
+    <section class="task-column">
+      <h2 class="task-column-header">TODO:</h2>
+      <div
+        cdkDropList
+        #todoList="cdkDropList"
+        [id]="status.Pending"
+        [cdkDropListData]="pendingTasks()"
+        [cdkDropListConnectedTo]="[inProgressList, doneList]"
+        (cdkDropListDropped)="drop($event)"
+        class="task-list"
+      >
+        @for (task of pendingTasks(); track task.id) {
+          <app-task-card
+            [task]="task"
+            (delete)="onDelete($event)"
+            [cdkDragData]="task"
+            cdkDrag
+          ></app-task-card>
+        }
+      </div>
+    </section>
 
-  <section class="task-column">
-    <h2 class="task-column-header">IN PROGRESS:</h2>
-    <div
-      cdkDropList
-      #inProgressList="cdkDropList"
-      [id]="status.InProgress"
-      [cdkDropListData]="inProgressTasks()"
-      [cdkDropListConnectedTo]="[todoList, doneList]"
-      (cdkDropListDropped)="drop($event)"
-      class="task-list"
-    >
-      @for (task of inProgressTasks(); track task.id) {
-        <app-task-card
-          [task]="task"
-          (delete)="onDelete($event)"
-          [cdkDragData]="task"
-          cdkDrag
-        ></app-task-card>
-      }
-    </div>
-  </section>
+    <section class="task-column">
+      <h2 class="task-column-header">IN PROGRESS:</h2>
+      <div
+        cdkDropList
+        #inProgressList="cdkDropList"
+        [id]="status.InProgress"
+        [cdkDropListData]="inProgressTasks()"
+        [cdkDropListConnectedTo]="[todoList, doneList]"
+        (cdkDropListDropped)="drop($event)"
+        class="task-list"
+      >
+        @for (task of inProgressTasks(); track task.id) {
+          <app-task-card
+            [task]="task"
+            (delete)="onDelete($event)"
+            [cdkDragData]="task"
+            cdkDrag
+          ></app-task-card>
+        }
+      </div>
+    </section>
 
-  <section class="task-column">
-    <h2 class="task-column-header">DONE:</h2>
-    <div
-      cdkDropList
-      #doneList="cdkDropList"
-      [id]="status.Completed"
-      [cdkDropListData]="completedTasks()"
-      [cdkDropListConnectedTo]="[todoList, inProgressList]"
-      (cdkDropListDropped)="drop($event)"
-      class="task-list"
-    >
-      @for (task of completedTasks(); track task.id) {
-        <app-task-card
-          [task]="task"
-          (delete)="onDelete($event)"
-          [cdkDragData]="task"
-          cdkDrag
-        ></app-task-card>
-      }
-    </div>
-  </section>
-</div>
+    <section class="task-column">
+      <h2 class="task-column-header">DONE:</h2>
+      <div
+        cdkDropList
+        #doneList="cdkDropList"
+        [id]="status.Completed"
+        [cdkDropListData]="completedTasks()"
+        [cdkDropListConnectedTo]="[todoList, inProgressList]"
+        (cdkDropListDropped)="drop($event)"
+        class="task-list"
+      >
+        @for (task of completedTasks(); track task.id) {
+          <app-task-card
+            [task]="task"
+            (delete)="onDelete($event)"
+            [cdkDragData]="task"
+            cdkDrag
+          ></app-task-card>
+        }
+      </div>
+    </section>
+  </div>
+}
 
-<button matButton="filled" color="primary" class="add-task-button" (click)="open()">
+<button
+  matButton="filled"
+  color="primary"
+  class="add-task-button"
+  [disabled]="isLoading() || error() != null"
+  (click)="open()"
+>
   Add a card
 </button>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -32,26 +32,27 @@ import { DraftTask, TaskStatus } from '../../core/tasks/task';
 })
 export class TaskActionsDialog {
   private readonly fb = inject(FormBuilder);
-  private readonly dialogRef = inject(MatDialogRef);
+  private readonly dialogRef = inject<MatDialogRef<TaskActionsDialog, DraftTask>>(MatDialogRef);
 
-  readonly add = output<DraftTask>();
-  readonly status = TaskStatus;
+  readonly types = Object.values(TaskStatus);
   readonly form = this.fb.group({
-    title: this.fb.control('', [Validators.required, Validators.maxLength(200)]),
-    status: this.fb.control('', Validators.required),
+    title: this.fb.control('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(200)],
+    }),
+    status: this.fb.control<TaskStatus | null>(null, { validators: Validators.required }),
   });
 
-  get types() {
-    return Object.values(this.status);
-  }
-
   addCard() {
-    if (!this.form.valid) {
-      this.dialogRef.close();
+    const { title, status } = this.form.getRawValue();
+
+    // `status` starts out null, so the guard doubles as the narrowing TypeScript needs
+    // to build a `DraftTask` without a cast.
+    if (this.form.invalid || status === null) {
+      this.form.markAllAsTouched();
       return;
     }
 
-    const draftTask = this.form.getRawValue() as DraftTask;
-    this.dialogRef.close(draftTask);
+    this.dialogRef.close({ title, status });
   }
 }

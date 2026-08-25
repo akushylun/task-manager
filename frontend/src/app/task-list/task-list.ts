@@ -1,78 +1,93 @@
-import { CdkDrag, CdkDragDrop, CdkDropList, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { filter, take, tap } from 'rxjs';
-import { tasksActions } from '../features/tasks/tasks.actions';
-import { tasksFeature } from '../features/tasks/tasks.reducer';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { filter, switchMap } from 'rxjs';
 import { TaskActionsDialog } from './task-actions-dialog/task-actions-dialog';
 
+import { DraftTask, Task, TaskStatus } from '../core/tasks/task';
+import { TasksDataService } from '../core/tasks/tasks-data.service';
+import { TasksStore } from '../core/tasks/tasks-store';
 import { TaskCard } from './task-card/task-card';
-import { Task, TaskStatus } from '../core/tasks/task';
 
 @Component({
   selector: 'app-task-list',
-  imports: [TaskCard, MatButtonModule, CdkDrag, CdkDropList],
+  imports: [TaskCard, MatButtonModule, MatProgressSpinnerModule, CdkDrag, CdkDropList],
   templateUrl: './task-list.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './task-list.css',
 })
 export class TaskList {
-  private readonly store = inject(Store);
   private readonly dialog = inject(MatDialog);
+  private readonly tasksDataService = inject(TasksDataService);
+  private readonly tasksStore = inject(TasksStore);
 
   readonly status = TaskStatus;
-  readonly pendingTasks = this.store.selectSignal(tasksFeature.selectPendingTasks);
-  readonly inProgressTasks = this.store.selectSignal(tasksFeature.selectInProgressTasks);
-  readonly completedTasks = this.store.selectSignal(tasksFeature.selectCompletedTasks);
-
-  ngOnInit(): void {
-    this.store.dispatch(tasksActions.loadTasks());
-  }
+  readonly pendingTasks = this.tasksStore.pendingTasks;
+  readonly inProgressTasks = this.tasksStore.inProgressTasks;
+  readonly completedTasks = this.tasksStore.completedTasks;
+  readonly isLoading = this.tasksStore.isLoading;
+  readonly error = this.tasksStore.error;
 
   /**
-   * Open task actions dialog and handle add task action
+   * Open the task actions dialog and add the task the user confirmed.
+   *
+   * The POST response carries the server-generated id, so the new task can be pushed
+   * straight into the store instead of triggering a full refetch.
    */
   open() {
     this.dialog
-      .open(TaskActionsDialog)
+      .open<TaskActionsDialog, undefined, DraftTask>(TaskActionsDialog)
       .afterClosed()
       .pipe(
-        take(1),
-        filter((item) => item != null),
-        tap((task) => this.store.dispatch(tasksActions.addTask(task))),
+        filter((draft): draft is DraftTask => draft != null),
+        switchMap((draft) => this.tasksDataService.addTask(draft)),
       )
-      .subscribe();
+      .subscribe({
+        next: (created) => this.tasksStore.addTask(created),
+        error: () => this.tasksStore.reload(),
+      });
   }
 
   /**
-   * Drop event between task lists and update task status
-   * @param event
+   * Move a task to the column it was dropped on.
+   *
+   * The store is updated first so the card lands immediately, then rolled back to the
+   * pre-drop snapshot if the server rejects the change.
    */
-  drop(event: CdkDragDrop<Task[]>) {
+  drop(event: CdkDragDrop<Task[], Task[], Task>) {
     if (event.previousContainer === event.container) {
       return;
     }
 
-    transferArrayItem(
-      event.previousContainer.data,
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex,
-    );
-
-    const id = event.container.data[event.currentIndex].id;
+    const task = event.item.data;
     const status = event.container.id as TaskStatus;
+    const snapshot = this.tasksStore.tasks();
 
-    this.store.dispatch(tasksActions.updateTask({ id, task: { status } }));
+    this.tasksStore.moveTask(task.id, status);
+
+    this.tasksDataService.update(task.id, { status }).subscribe({
+      error: () => this.tasksStore.restore(snapshot),
+    });
   }
 
   /**
-   * Delete task
+   * Delete a task optimistically, restoring it if the request fails.
    * @param id
    */
   onDelete(id: Task['id']) {
-    this.store.dispatch(tasksActions.deleteTask({ id }));
+    const snapshot = this.tasksStore.tasks();
+
+    this.tasksStore.removeTask(id);
+
+    this.tasksDataService.delete(id).subscribe({
+      error: () => this.tasksStore.restore(snapshot),
+    });
+  }
+
+  /** Re-run the initial fetch after a load failure. */
+  retry() {
+    this.tasksStore.reload();
   }
 }

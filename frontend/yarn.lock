@@ -1075,39 +1075,6 @@
   dependencies:
     "@tybys/wasm-util" "^0.10.3"
 
-"@ngrx/effects@^21.0.1":
-  version "21.1.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-21.1.1.tgz#1372a05848cfe82859d116b1cb359fbc11b90f23"
-  integrity sha512-JQUv2tYyjkbdsE40WYtJDsiI+3qtn4V5m0Ybr2CYw9zKpVQshDV5MLLAni+SuijlHAWJkw8x4wwnYmNyG/Rmng==
-  dependencies:
-    tslib "^2.0.0"
-
-"@ngrx/entity@^21.0.1":
-  version "21.0.1"
-  resolved "https://registry.npmjs.org/@ngrx/entity/-/entity-21.0.1.tgz"
-  integrity sha512-h7PjW8WzkPwSYDlicWcEw6EJ9yBfa+fbf5tmIty4cZ8yH6+Ld3aHuGAMAu8xbnV79oj0TGa/PSynu5LZq4jXdA==
-  dependencies:
-    tslib "^2.0.0"
-
-"@ngrx/schematics@^21.0.1":
-  version "21.0.1"
-  resolved "https://registry.npmjs.org/@ngrx/schematics/-/schematics-21.0.1.tgz"
-  integrity sha512-FpdzU91QXnXwxS3+Mo7zKHAOzQYmNkC1gtmj1t9z1Qs67glqFCEMtDoa3ew8P7kJnqRWNbyS8qGNmIOyEZkpHQ==
-
-"@ngrx/store-devtools@^21.0.1":
-  version "21.1.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-21.1.1.tgz#44af0dd7b8e69acefc7ad1355d328fb380efb112"
-  integrity sha512-gNRDPCZZCO2uzdamco6xJ7292cZdVumHqOIAqmJsYaHkRQ4sZIKBjwFyYXAtPvS6a+Y9bnkGkHetxkF1iZzDvA==
-  dependencies:
-    tslib "^2.0.0"
-
-"@ngrx/store@^21.0.1":
-  version "21.1.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-21.1.1.tgz#4102fa28284a0f585df4fd89c8f3f67c8a7d8e7b"
-  integrity sha512-B0/IyBTqBExmwPAmrpcJrhlrn+FeeitvOW8ltf7O3kJb2vRKduV5Oi34GLiwYQ8eAukTbKyWQv/VV02gxLeEMg==
-  dependencies:
-    tslib "^2.0.0"
-
 "@oxc-parser/binding-android-arm-eabi@0.142.0":
   version "0.142.0"
   resolved "https://registry.yarnpkg.com/@oxc-parser/binding-android-arm-eabi/-/binding-android-arm-eabi-0.142.0.tgz#12951a56ed573c0246ceacbc94e29d7e90d3925a"
@@ -3545,7 +3512,7 @@ tr46@^6.0.0:
   dependencies:
     punycode "^2.3.1"
 
-tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.4.0:
+tslib@^2.1.0, tslib@^2.3.0, tslib@^2.4.0:
   version "2.8.1"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==

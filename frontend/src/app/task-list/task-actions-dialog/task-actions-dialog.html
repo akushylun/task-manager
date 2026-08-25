@@ -2,8 +2,10 @@
 <mat-dialog-content [formGroup]="form">
   <mat-form-field class="form-field">
     <mat-label>Task title</mat-label>
-    <input #input matInput formControlName="title" type="text" placeholder="Enter task title" />
-    @if (form.controls.title.hasError('maxlength')) {
+    <input matInput formControlName="title" type="text" placeholder="Enter task title" />
+    @if (form.controls.title.hasError('required')) {
+      <mat-error>Title is required</mat-error>
+    } @else if (form.controls.title.hasError('maxlength')) {
       <mat-error>Title must be 200 characters or fewer</mat-error>
     }
   </mat-form-field>
@@ -14,6 +16,9 @@
         <mat-option [value]="type">{{ type }}</mat-option>
       }
     </mat-select>
+    @if (form.controls.status.hasError('required')) {
+      <mat-error>Type is required</mat-error>
+    }
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

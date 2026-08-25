@@ -10,10 +10,10 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authDataService = inject(AuthDataService);
   const router = inject(Router);
 
-  const user = userService.getValue();
+  const isAuthenticated = userService.isAuthenticated();
 
-  if (user) {
-    return of(true);
+  if (isAuthenticated) {
+    return true;
   }
 
   return authDataService.me().pipe(

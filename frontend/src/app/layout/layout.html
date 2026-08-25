@@ -1,7 +1,6 @@
-@if (user$ | async) {
+@if (user()) {
   <mat-toolbar color="primary" class="toolbar">
     <button matButton="outlined" routerLink="/tasks">Tasks</button>
-    <button matButton="outlined" routerLink="/account">Account</button>
     <span class="spacer"></span>
     <button matButton="outlined" (click)="logout()">Logout</button>
   </mat-toolbar>
