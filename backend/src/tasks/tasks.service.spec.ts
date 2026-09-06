@@ -109,7 +109,16 @@ describe('TasksService', () => {
     it('returns the persisted task', async () => {
       const result = await service.createTask(draftTask, userMock);
 
-      expect(result).toBe(savedTask);
+      expect(result).toEqual({ id: 1, ...draftTask });
+    });
+
+    // Regression: `save()` hands back the instance built from `{ ...value, user }`,
+    // so returning it verbatim put the owner's password hash in the response body.
+    it('does not return the owner', async () => {
+      const result = await service.createTask(draftTask, userMock);
+
+      expect(result).not.toHaveProperty('user');
+      expect(JSON.stringify(result)).not.toContain(userMock.password);
     });
   });
 

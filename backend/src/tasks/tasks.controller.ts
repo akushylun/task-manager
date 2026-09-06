@@ -12,7 +12,9 @@ import { Role } from '../auth/role.enum';
 import { User } from '../auth/user.entity';
 import { CurrentUser } from '../decorators/current-user/current-user.decorator';
 import { Roles } from '../decorators/roles/roles.decorator';
+import { Serialize } from '../interceptors/serialize/serialize.interceptor';
 import { CreateTaskDto } from './dtos/create-task.dto';
+import { TaskDto } from './dtos/task.dto';
 import { UpdateTaskDto } from './dtos/update-task.dto';
 import { TasksService } from './tasks.service';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
@@ -20,6 +22,7 @@ import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 @ApiTags('tasks')
 @ApiCookieAuth()
 @Roles(Role.User)
+@Serialize(TaskDto)
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
