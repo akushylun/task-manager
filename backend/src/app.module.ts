@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -10,6 +10,8 @@ import { AuthGuard } from './guards/auth/auth.guard';
 import { dataSourceOptions } from './database/data-source-options';
 import { RolesGuard } from './guards/roles/roles.guard';
 import { HttpExceptionFilter } from './filters/http-exception/http-exception.filter';
+import { BullModule } from '@nestjs/bullmq';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -17,6 +19,15 @@ import { HttpExceptionFilter } from './filters/http-exception/http-exception.fil
     TasksModule,
     AuthModule,
     TypeOrmModule.forRoot(dataSourceOptions),
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        connection: {
+          url: config.getOrThrow<string>('REDIS_URL'),
+        },
+      }),
+    }),
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [

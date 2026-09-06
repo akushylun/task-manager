@@ -59,6 +59,11 @@ async function bootstrap() {
     origin: 'http://localhost:4200',
     credentials: true,
   });
+  // Lets Nest run its shutdown handlers on SIGTERM/SIGINT, which is what tells
+  // the BullMQ worker to stop taking new jobs and finish the one it is running.
+  // Without it a job killed mid-run sits in 'active' until its lock expires.
+  app.enableShutdownHooks();
+
   await app.listen(config.get<string>('PORT') ?? 3000);
 }
 bootstrap();

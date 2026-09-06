@@ -7,11 +7,14 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Task } from '../tasks/task.entity';
 import { TaskStatus } from '../tasks/task-status.enum';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private repo: Repository<User>,
+    @InjectQueue('welcome-email') private welcomeEmailQueue: Queue,
     private dataSource: DataSource,
   ) {}
 
@@ -27,7 +30,7 @@ export class AuthService {
   }
 
   async create({ email, password }: CreateUserDto) {
-    return this.dataSource.transaction(async (manager) => {
+    const user = await this.dataSource.transaction(async (manager) => {
       const salt = await bcrypt.genSalt();
       const hash = await bcrypt.hash(password, salt);
       const draftUser = { email, password: hash };
@@ -39,6 +42,19 @@ export class AuthService {
       });
       return user;
     });
+
+    await this.welcomeEmailQueue.add(
+      'welcome-email',
+      {
+        userId: user.id,
+      },
+      {
+        jobId: `welcome-email-${user.id}`,
+        attempts: 3,
+        backoff: { type: 'exponential', delay: 1000 },
+      },
+    );
+    return user;
   }
 
   isValidPassword(password: string, hashPassword: string) {
