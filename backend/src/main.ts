@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { createClient } from 'redis';
 import { RedisStore } from 'connect-redis';
+import { BROWSER_ORIGIN } from './browser-origin';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -55,8 +56,10 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  // HTTP only. The WebSocket gateway configures its own CORS through engine.io
+  // and inherits nothing from here — see TasksGateway.
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: BROWSER_ORIGIN,
     credentials: true,
   });
   // Lets Nest run its shutdown handlers on SIGTERM/SIGINT, which is what tells
