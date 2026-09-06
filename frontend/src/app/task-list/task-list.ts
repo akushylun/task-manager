@@ -8,6 +8,7 @@ import { TaskActionsDialog } from './task-actions-dialog/task-actions-dialog';
 
 import { DraftTask, Task, TaskStatus } from '../core/tasks/task';
 import { TasksDataService } from '../core/tasks/tasks-data.service';
+import { TasksSocketService } from '../core/tasks/tasks-socket.service';
 import { TasksStore } from '../core/tasks/tasks-store';
 import { TaskCard } from './task-card/task-card';
 
@@ -22,6 +23,13 @@ export class TaskList {
   private readonly dialog = inject(MatDialog);
   private readonly tasksDataService = inject(TasksDataService);
   private readonly tasksStore = inject(TasksStore);
+
+  /**
+   * Injected for its side effect: creating it opens the socket and starts
+   * applying server pushes to the store. Nothing here reads it, and nothing
+   * should — the board renders from the store either way.
+   */
+  private readonly tasksSocket = inject(TasksSocketService);
 
   readonly status = TaskStatus;
   readonly pendingTasks = this.tasksStore.pendingTasks;
@@ -45,7 +53,7 @@ export class TaskList {
         switchMap((draft) => this.tasksDataService.addTask(draft)),
       )
       .subscribe({
-        next: (created) => this.tasksStore.addTask(created),
+        next: (created) => this.tasksStore.upsertTask(created),
         error: () => this.tasksStore.reload(),
       });
   }

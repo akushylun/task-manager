@@ -28,9 +28,29 @@ export class TasksStore {
   readonly isLoading = computed(() => this.tasksResource.status() === 'loading');
   readonly error = this.tasksResource.error;
 
-  /** Append a task the server already created, so it carries a real id. */
-  addTask(task: Task) {
-    this.tasks.update((tasks) => [...tasks, task]);
+  /**
+   * Insert a task, or replace the one that already has its id.
+   *
+   * Idempotent on purpose. A socket is at-most-once and the tab that made a
+   * change has already applied it optimistically, so its own event arrives as a
+   * duplicate. The server cannot filter that out for us: the write arrives over
+   * HTTP on a completely different connection from the socket, so the controller
+   * has no idea which socket — if any — belongs to the caller.
+   *
+   * Absorbing the duplicate here is cheaper than teaching the client to announce
+   * its socket id on every write, and it degrades better: two tabs of the same
+   * account both converge whichever one acted.
+   */
+  upsertTask(task: Task) {
+    this.tasks.update((tasks) => {
+      const index = tasks.findIndex((existing) => existing.id === task.id);
+      if (index === -1) {
+        return [...tasks, task];
+      }
+      const next = [...tasks];
+      next[index] = task;
+      return next;
+    });
   }
 
   moveTask(id: Task['id'], status: TaskStatus) {
