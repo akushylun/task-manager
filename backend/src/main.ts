@@ -7,6 +7,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { createClient } from 'redis';
 import { RedisStore } from 'connect-redis';
 import { BROWSER_ORIGIN } from './browser-origin';
+import { SessionIoAdapter } from './session-io.adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -29,26 +30,30 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, documentFactory);
 
-  app.use(
-    session({
-      store: new RedisStore({ client: redisClient, disableTouch: true }),
-      secret: config.getOrThrow<string>('SESSION_SECRET'),
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        path: '/',
-        maxAge: 1000 * 60 * 60 * 24,
-        sameSite: 'lax',
-        // A `Secure` cookie is only sent over HTTPS — and express-session
-        // silently drops the Set-Cookie entirely on a plain-HTTP connection.
-        // "Secure" is about the transport (HTTPS), NOT about NODE_ENV, so it
-        // gets its own switch: false for local HTTP (docker compose), true
-        // only once TLS terminates in front of the app. Behind a TLS-
-        // terminating proxy you also need app.set('trust proxy', 1).
-        secure: config.get<string>('COOKIE_SECURE') === 'true',
-      },
-    }),
-  );
+  // One instance, two channels. The HTTP stack and the WebSocket handshake must
+  // agree on what a valid session is, so they share this object rather than each
+  // constructing their own from the same options.
+  const sessionMiddleware = session({
+    store: new RedisStore({ client: redisClient, disableTouch: true }),
+    secret: config.getOrThrow<string>('SESSION_SECRET'),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      path: '/',
+      maxAge: 1000 * 60 * 60 * 24,
+      sameSite: 'lax',
+      // A `Secure` cookie is only sent over HTTPS — and express-session
+      // silently drops the Set-Cookie entirely on a plain-HTTP connection.
+      // "Secure" is about the transport (HTTPS), NOT about NODE_ENV, so it
+      // gets its own switch: false for local HTTP (docker compose), true
+      // only once TLS terminates in front of the app. Behind a TLS-
+      // terminating proxy you also need app.set('trust proxy', 1).
+      secure: config.get<string>('COOKIE_SECURE') === 'true',
+    },
+  });
+
+  app.use(sessionMiddleware);
+  app.useWebSocketAdapter(new SessionIoAdapter(app, sessionMiddleware));
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

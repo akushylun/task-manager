@@ -5,8 +5,13 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import type { IncomingMessage } from 'http';
 import { Server, Socket } from 'socket.io';
+import type { AppSession } from '../auth/session';
 import { BROWSER_ORIGIN } from '../browser-origin';
+
+/** The handshake request, after SessionIoAdapter has run the session middleware. */
+type HandshakeRequest = IncomingMessage & { session?: AppSession };
 
 /**
  * Pushes task changes to the browser.
@@ -51,12 +56,33 @@ export class TasksGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   private readonly server: Server;
 
-  // TODO(AC3): these sockets are still anonymous. Any page served from
-  // BROWSER_ORIGIN can connect without a session, and nothing yet resolves which
-  // user is on the other end. Authentication lands next.
+  /**
+   * Authentication happens exactly once, here, because the handshake is the only
+   * moment this connection will ever carry HTTP headers. Contrast `AuthGuard`,
+   * which re-reads the session on every single request: a socket authenticated
+   * now stays authenticated for hours, outliving the session that opened it.
+   * Signout therefore has to close the socket — nothing here will notice.
+   *
+   * Only the id is taken, not the full `User`. `AuthGuard` resolves the row
+   * because handlers need the entity; all this connection needs is which room to
+   * join, and a DB round trip per connection buys nothing.
+   */
   handleConnection(client: Socket) {
+    const { session } = client.request as HandshakeRequest;
+    const userId = session?.userId;
+
+    if (!userId) {
+      // `true` closes the underlying connection rather than just leaving the
+      // namespace. Safe to do after connect only because every emit is
+      // room-scoped (AC4) and this socket has joined nothing.
+      this.logger.warn(`refused ${client.id}: no authenticated session`);
+      client.disconnect(true);
+      return;
+    }
+
+    client.data.userId = userId;
     this.logger.log(
-      `connected ${client.id} via ${client.conn.transport.name}`,
+      `connected ${client.id} as user ${userId} via ${client.conn.transport.name}`,
     );
   }
 
