@@ -9,6 +9,7 @@ import type { IncomingMessage } from 'http';
 import { Server, Socket } from 'socket.io';
 import type { AppSession } from '../auth/session';
 import { BROWSER_ORIGIN } from '../browser-origin';
+import { roomForUser, TaskPayload, toTaskPayload } from './task-events';
 
 /** The handshake request, after SessionIoAdapter has run the session middleware. */
 type HandshakeRequest = IncomingMessage & { session?: AppSession };
@@ -67,7 +68,7 @@ export class TasksGateway implements OnGatewayConnection, OnGatewayDisconnect {
    * because handlers need the entity; all this connection needs is which room to
    * join, and a DB round trip per connection buys nothing.
    */
-  handleConnection(client: Socket) {
+  async handleConnection(client: Socket) {
     const { session } = client.request as HandshakeRequest;
     const userId = session?.userId;
 
@@ -81,12 +82,36 @@ export class TasksGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     client.data.userId = userId;
+    await client.join(roomForUser(userId));
     this.logger.log(
       `connected ${client.id} as user ${userId} via ${client.conn.transport.name}`,
     );
   }
 
   handleDisconnect(client: Socket) {
+    // Room membership is torn down by socket.io itself on disconnect.
     this.logger.log(`disconnected ${client.id}`);
+  }
+
+  emitTaskCreated(userId: number, task: TaskPayload) {
+    this.emitToUser(userId, 'task.created', toTaskPayload(task));
+  }
+
+  emitTaskUpdated(userId: number, task: TaskPayload) {
+    this.emitToUser(userId, 'task.updated', toTaskPayload(task));
+  }
+
+  /**
+   * Deletion sends an identifier, not the task. The row is gone, so anything
+   * else would be a description of something that no longer exists — and
+   * TypeORM's `remove()` strips the id off the entity it returns, which makes
+   * the corpse useless anyway. All the client needs is which card to drop.
+   */
+  emitTaskDeleted(userId: number, taskId: number) {
+    this.emitToUser(userId, 'task.deleted', { id: taskId });
+  }
+
+  private emitToUser(userId: number, event: string, payload: unknown) {
+    this.server.to(roomForUser(userId)).emit(event, payload);
   }
 }

@@ -16,6 +16,7 @@ import { Serialize } from '../interceptors/serialize/serialize.interceptor';
 import { CreateTaskDto } from './dtos/create-task.dto';
 import { TaskDto } from './dtos/task.dto';
 import { UpdateTaskDto } from './dtos/update-task.dto';
+import { TasksGateway } from './tasks.gateway';
 import { TasksService } from './tasks.service';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
@@ -25,7 +26,20 @@ import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 @Serialize(TaskDto)
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+  /**
+   * The emit lives here rather than in `TasksService` on purpose. The service is
+   * the one thing in this backend with a complete unit-test suite, and those
+   * tests assume a pure persistence layer with nothing but a repository behind
+   * it. The controller is also where the request's user is already resolved.
+   *
+   * The cost, stated plainly: a future non-HTTP writer — a queue job, a seed
+   * script — would change tasks without telling anyone. If that day comes, this
+   * moves into the service or becomes a domain event; it does not stay here.
+   */
+  constructor(
+    private readonly tasksService: TasksService,
+    private readonly tasksGateway: TasksGateway,
+  ) {}
 
   @Get()
   findAll(@CurrentUser() user: User) {
@@ -33,21 +47,32 @@ export class TasksController {
   }
 
   @Post()
-  createTask(@Body() body: CreateTaskDto, @CurrentUser() user: User) {
-    return this.tasksService.createTask(body, user);
+  async createTask(@Body() body: CreateTaskDto, @CurrentUser() user: User) {
+    const task = await this.tasksService.createTask(body, user);
+    this.tasksGateway.emitTaskCreated(user.id, task);
+    return task;
   }
 
   @Put('/:id')
-  updateTask(
+  async updateTask(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateTaskDto,
     @CurrentUser() user: User,
   ) {
-    return this.tasksService.updateTask(id, body, user);
+    const task = await this.tasksService.updateTask(id, body, user);
+    this.tasksGateway.emitTaskUpdated(user.id, task);
+    return task;
   }
 
   @Delete('/:id')
-  removeTask(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: User) {
-    return this.tasksService.removeTask(id, user);
+  async removeTask(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: User,
+  ) {
+    const removed = await this.tasksService.removeTask(id, user);
+    // The route param, not the returned entity: TypeORM's `remove()` deletes the
+    // id from the object it hands back.
+    this.tasksGateway.emitTaskDeleted(user.id, id);
+    return removed;
   }
 }
